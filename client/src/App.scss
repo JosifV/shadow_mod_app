@@ -1,0 +1,16 @@
+.app {
+    background: #333;
+    color: #fff9ee;
+}
+.fileForm{
+    height: 2vh;
+}
+.mainCont{
+    min-height: 98vh;
+    max-height: 100%;
+    padding: 2rem;
+
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 4rem;
+}

@@ -1,0 +1,62 @@
+.electronics{
+    background: #fb5607;
+}
+.energetics{
+    background: #5a189a;
+}
+.materials{
+    background: #4361ee;
+}
+.medics{
+    background: #91c31d;
+}
+
+/*#########*/
+
+.cardMain{
+    $cardWidth: 8rem; //* 10%
+    $cardHeight: 10rem;
+
+    flex: 1 0 $cardWidth;
+
+    min-width: $cardWidth;
+    max-width: $cardWidth;
+
+    max-height: $cardHeight;
+
+    padding: 0.5rem;
+    border-radius: 5px;
+    &:hover{
+        cursor: pointer;
+        -webkit-box-shadow: 0px 2px 15px 5px #00e1ff56; 
+        box-shadow: 0px 2px 15px 5px #00e1ff56;
+    }
+    
+}
+.cardDesc{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tags{
+    padding-left: 2rem;
+}
+.filterInputs{
+    display: flex;
+    flex-direction: column;
+}
+.popupCont{
+    width: 20rem;
+    background: #333;
+    color: #fff9ee;
+    padding: 1rem;
+}
+.inputSearch{
+    margin-right: 45% !important;
+    .MuiInputBase-input{
+        background: #cccccc;
+    }
+}
+.MuiPaper-rounded{
+    border-radius: 0 !important;
+}
