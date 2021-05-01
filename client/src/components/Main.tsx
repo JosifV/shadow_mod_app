@@ -56,7 +56,7 @@ export const Main: React.FC = () => {
     )
     let startHoverCount = (index: number) => {
         setCurrCard(index) //* set the curr card var
-        start()
+        // start()
     }
 
     let endHoverCount = () => stop();
