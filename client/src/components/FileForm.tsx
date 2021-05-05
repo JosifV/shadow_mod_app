@@ -7,10 +7,21 @@ export const FileForm: React.FC = () => {
         let apiInstance = new API()
         let {data} = await apiInstance.uploadFile(fileRef.current!.files![0])
         console.log(data);
-        
+    }
+    let base = async() => {
+        let apiInstance = new API()
+        let {data} = await apiInstance.base()
+        console.log(data);
+    }
+    let auth = async() => {
+        let apiInstance = new API()
+        let {data} = await apiInstance.auth()
+        console.log(data);
     }
     return <div className="fileForm">
         <input type="file" ref={fileRef} name="" id="" />
         <button onClick={processFile}>Process</button>
+        <button onClick={base}>Base</button>
+        <button onClick={auth}>Auth</button>
     </div>
 }
