@@ -18,5 +18,5 @@ export const colors = {
     orangeMain:'#ff9011'
 }
 export const logicCriterion = {
-    hoverShadowSeconds: 5 //* 6 seconds because it is zero based
+    hoverShadowSeconds: 2 //* 3 seconds because it is zero based
 }

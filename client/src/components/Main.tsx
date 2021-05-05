@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, vetoAny } from "../types";
 import { makingCards } from "../utils"
-import { useInterval } from 'react-interval-hook';
 import { logicCriterion as logic } from "../const";
 
 import Dialog from '@material-ui/core/Dialog';
@@ -38,39 +37,42 @@ export const Main: React.FC = () => {
     const classes = useStyles();
     let [cardTextArr] = useState<string[]>(originalcards.map(x => `${x.title.toLowerCase()} | ${x.context.toLowerCase()} | ${x.tags.map(t => t.replace('#', '').toLowerCase()).join(' ')}`))
 
-    let [hover, setHover] = useState<number>(0);
+    let [seconds, setSeconds] = useState<number>(0);
+    let [startTime, setStartTime] = useState<number>(0);
+    let [over, setOver] = useState<boolean>(false);
+
     let [openPopup, setOpenPopup] = useState<boolean[]>(originalcards.map(x => x.opened))
 
     let [clickCard, setClickCard] = useState<Partial<Card>>({})
 
     //* HOVER INTERVAL
-    let { start, stop } = useInterval(
-        () => setHover(hover++),
-        1000,
-        {
-            // autoStart: false,
-            // immediate: false,
-            // selfCorrecting: false,
-            onFinish: () => setHover(0),
-        }
-    )
     let startHoverCount = (index: number) => {
         setCurrCard(index) //* set the curr card var
-        // start()
+        setStartTime(new Date().getTime()) //* in ms
     }
 
-    let endHoverCount = () => stop();
+    let endHoverCount = () => {
+        let timeDiff = Math.abs(new Date().getTime() - startTime); 
+        //* strip the ms
+        timeDiff /= 1000;
+      
+        //* calc seconds
+        setSeconds(Math.round(timeDiff % 60))
+        setOver(!over)
+    }
 
     useEffect(() => {
-        if (hover >= logic.hoverShadowSeconds) {
-            console.log(`hover ::: ${hover}`);
+        if (seconds >= logic.hoverShadowSeconds) {
+            console.log(`seconds ::: ${seconds}`);
             console.log('#######');
             (async () => {
                 let res = await 'someApiFuncCall'
                 //todo
             })()
+            setSeconds(0)
+            setStartTime(0)
         }
-    }, [hover])
+    }, [over])
     //*
 
     //* OPEN POPUP
@@ -94,7 +96,10 @@ export const Main: React.FC = () => {
 
     //* SEARCH ENTRY
     let search = (args: string) => {
-        if (args.length === 0) setFilteredCards(originalcards)
+        if (args.length === 0) {
+            setOpenPopup(originalcards.map(c=> c.opened))
+            setFilteredCards(originalcards)
+        }
         if (args.length > 3) {
             let arrToPush: Card[] = []
             for (let num = 0; num < cardTextArr.length; num++) {
