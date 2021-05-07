@@ -9,9 +9,9 @@ def create_table(query):
         conn.cursor().execute(query)
     except Error as e:
         print(e)
-    finally:
-        if conn:
-            conn.close()
+    # finally:
+        # if conn:
+            # conn.close()
         
 def write_in_table(query):
     try:
@@ -19,19 +19,20 @@ def write_in_table(query):
         conn.cursor().execute(query)
     except Error as error:
         print(error)
-    finally:
-        if conn:
-            conn.close()
+    # finally:
+        # if conn:
+            # conn.close()
             
 def list_table(query):
     try:
         conn = sqlite3.connect(db_uri)
-        res = conn.cursor().execute(query)
+        res = conn.cursor().execute(query).fetchall()
+        print(res)
         for x in res:
             print(x)
         return res
     except Error as error:
         print(error)
-    finally:
-        if conn:
-            conn.close()        
+    # finally:
+        # if conn:
+            # conn.close()        

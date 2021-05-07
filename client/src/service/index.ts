@@ -17,30 +17,4 @@ export class API {
             throw error
         }
     }
-
-    public async base(){
-        try {
-            let resp = await axios({
-                method:'GET',
-                url:`${process.env.REACT_APP_BASE_URL}`,
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                }
-            })
-            return resp
-        } catch (error) {
-            throw error
-        }
-    }
-    public async auth(){
-        try {
-            let resp = await axios({
-                method:'GET',
-                url:`${process.env.REACT_APP_BASE_URL}/auth`,
-            })
-            return resp
-        } catch (error) {
-            throw error
-        }
-    }
 }
