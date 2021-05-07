@@ -11,14 +11,20 @@ def db_create_table(table_name):
     #Doping users table if already exists.
     # cursor.execute("DROP TABLE IF EXISTS users")
 
-    #Creating table as per requirement
-    sql =f'''CREATE TABLE "{table_name}" (
-            id serial PRIMARY KEY,
-            name text NOT NULL,
-            access integer 
-        )'''
-    cursor.execute(sql)
-    print("Table created successfully........")
+    try:
+        #Creating table as per requirement
+        sql =f'''CREATE TABLE "{table_name}" (
+                id serial PRIMARY KEY,
+                name text NOT NULL,
+                access integer 
+            )'''
+        cursor.execute(sql)
+        print("Table created successfully........")
+    except Error as err:
+        resp = {'status': 400, 'msg': err}
 
-    #Closing the connection
-    conn.close()
+    finally: 
+        if conn:
+            # Closing the connection
+            conn.close()
+    return resp

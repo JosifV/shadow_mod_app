@@ -60,7 +60,7 @@ def file_controler():
     # df = pd.read_excel (r'Path where the Excel file is stored\File name.xlsx')
     parse = pd.read_excel('./file/empl.xlsx')  # pandas parse excel file
     data_frame = pd.DataFrame(parse)  # make pandas data frame
-    print(data_frame)
+    # print(data_frame)
 
     #* to make binar dummies out of column
     #* to avoid multicollinearity issues in prediction model, drop the 0 column with 'drop_first=True'
@@ -71,6 +71,15 @@ def file_controler():
     response = json.dumps(response)
     return response
 
+@app.route('/hover/<id>/<val>', methods=['POST'])
+def hover(id, val):
+    #todo 
+    return json.dumps({'status': 200, 'msg':{'id':id, 'val':val}})
+
+@app.route('/click/<id>', methods=['POST'])
+def click(id):
+    #todo 
+    return json.dumps({'status': 200, 'msg':{'id':id}})
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -78,8 +78,11 @@ export const Main: React.FC = () => {
             console.log(`seconds ::: ${seconds}`);
             console.log('#######');
             (async () => {
-                let res = await 'hover api call'
-                //todo
+                let apiInstance = new API()
+                let {data} = await apiInstance.updateHover({
+                    id:filteredCards[currCard].id,
+                    val:seconds
+                })
             })()
             setSeconds(0)
             setStartTime(0)
@@ -99,10 +102,14 @@ export const Main: React.FC = () => {
     }
 
     useEffect(() => {
-        (async () => {
-            let res = await 'click api call'
-            //todo
-        })()
+        if(filteredCards.length){
+            (async () => {
+                let apiInstance = new API()
+                let {data} = await apiInstance.updateClick({
+                    id:filteredCards[currCard].id
+                })
+            })()
+        }
     }, [clickCard])
     //*
 
