@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Card, vetoAny } from "../types";
-import { makingCards } from "../utils"
+import { parseCards } from "../utils"
 import { logicCriterion as logic } from "../const";
 
 import Dialog from '@material-ui/core/Dialog';
@@ -8,6 +8,7 @@ import { AppBar, Toolbar, IconButton, TextField, Typography, Theme, createStyles
 
 //@ts-ignore
 import CloseIcon from '@material-ui/icons/Close';
+import { API } from "../service";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,19 +30,30 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 export const Main: React.FC = () => {
-    let [originalcards] = useState<Card[]>(makingCards(150))
-    let [filteredCards, setFilteredCards] = useState<Card[]>([...originalcards])
+    let [originalcards, setOriginalCards] = useState<Card[]>([])
+    let [filteredCards, setFilteredCards] = useState<Card[]>([])
+
+    useEffect(() => {
+        (async () => {
+            let apiInstance = new API()
+            let { data } = await apiInstance.fetchData()
+            setOriginalCards(parseCards(data))
+            setFilteredCards(parseCards(data))
+            setCardTextArr(parseCards(data).map(x => `${x.title.toLowerCase()} | ${x.context.toLowerCase()} | ${x.tags.map(t => t.replace('#', '').toLowerCase()).join(' ')}`))
+            setOpenPopup(parseCards(data).map(x => x.opened))
+        })()
+    }, [])
 
     let [currCard, setCurrCard] = useState<number>(-1)
 
     const classes = useStyles();
-    let [cardTextArr] = useState<string[]>(originalcards.map(x => `${x.title.toLowerCase()} | ${x.context.toLowerCase()} | ${x.tags.map(t => t.replace('#', '').toLowerCase()).join(' ')}`))
+    let [cardTextArr, setCardTextArr] = useState<string[]>([])
 
     let [seconds, setSeconds] = useState<number>(0);
     let [startTime, setStartTime] = useState<number>(0);
     let [over, setOver] = useState<boolean>(false);
 
-    let [openPopup, setOpenPopup] = useState<boolean[]>(originalcards.map(x => x.opened))
+    let [openPopup, setOpenPopup] = useState<boolean[]>([])
 
     let [clickCard, setClickCard] = useState<Partial<Card>>({})
 
@@ -52,10 +64,10 @@ export const Main: React.FC = () => {
     }
 
     let endHoverCount = () => {
-        let timeDiff = Math.abs(new Date().getTime() - startTime); 
+        let timeDiff = Math.abs(new Date().getTime() - startTime);
         //* strip the ms
         timeDiff /= 1000;
-      
+
         //* calc seconds
         setSeconds(Math.round(timeDiff % 60))
         setOver(!over)
@@ -66,7 +78,7 @@ export const Main: React.FC = () => {
             console.log(`seconds ::: ${seconds}`);
             console.log('#######');
             (async () => {
-                let res = await 'someApiFuncCall'
+                let res = await 'hover api call'
                 //todo
             })()
             setSeconds(0)
@@ -88,7 +100,7 @@ export const Main: React.FC = () => {
 
     useEffect(() => {
         (async () => {
-            let res = await 'someApiFuncCall'
+            let res = await 'click api call'
             //todo
         })()
     }, [clickCard])
@@ -97,7 +109,7 @@ export const Main: React.FC = () => {
     //* SEARCH ENTRY
     let search = (args: string) => {
         if (args.length === 0) {
-            setOpenPopup(originalcards.map(c=> c.opened))
+            setOpenPopup(originalcards.map(c => c.opened))
             setFilteredCards(originalcards)
         }
         if (args.length > 3) {
@@ -108,13 +120,13 @@ export const Main: React.FC = () => {
                 }
             }
             setFilteredCards(arrToPush)
-            setOpenPopup(arrToPush.map(c=> c.opened))
+            setOpenPopup(arrToPush.map(c => c.opened))
         }
     }
 
     let filterShadow = async (value: string) => {
         console.log(value);
-        let res = await 'someApiFuncCall'
+        let res = await 'filter api call'
         //todo
     }
     //*
@@ -129,26 +141,25 @@ export const Main: React.FC = () => {
             </Toolbar>
         </AppBar>
 
-        <div className="mainCont">
+        <div className="mainCont" >
             {filteredCards.map((x, xIndex) => <div onMouseEnter={() => startHoverCount(xIndex)} onMouseLeave={endHoverCount} onClick={() => popupHandler(x, xIndex, true)} className={x.context.concat(' cardMain')} key={xIndex}>
-                <h4 style={{ marginTop: 0 }}>{x.title}</h4>
-                <p style={{ marginTop: 0 }}>{x.context}</p>
-                <p className="cardDesc">{x.tags.join(' ')}</p>
-                {openPopup.length ? <Dialog open={openPopup[xIndex]} onBackdropClick={() => popupHandler(x, xIndex, false)}>
-                    <IconButton aria-label="close" className={classes.closeButton} onClick={() => popupHandler(x, xIndex, false)}>
-                        <CloseIcon />
-                    </IconButton>
-                    <div className="popupCont">
-                        <h4><strong>Title: </strong>{x.title}</h4>
-                        <hr />
-                        <p style={{ marginTop: 0 }}><strong>Context: </strong>{x.context}</p>
-                        <hr />
-                        <strong>Tags: </strong>
-                        {x.tags.map((t, tIndex) => <p key={`tag_${tIndex}`} className="tags">{t}</p>)}
-                    </div>
-                </Dialog> : null}
-            </div>)}
-
+            <h4 style={{ marginTop: 0 }}>{x.title}</h4>
+            <p style={{ marginTop: 0 }}>{x.context}</p>
+            <p className="cardDesc">{x.tags.join(' ')}</p>
+            {openPopup.length ? <Dialog open={openPopup[xIndex]} onBackdropClick={() => popupHandler(x, xIndex, false)}>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => popupHandler(x, xIndex, false)}>
+                    <CloseIcon />
+                </IconButton>
+                <div className="popupCont">
+                    <h4><strong>Title: </strong>{x.title}</h4>
+                    <hr />
+                    <p style={{ marginTop: 0 }}><strong>Context: </strong>{x.context}</p>
+                    <hr />
+                    <strong>Tags: </strong>
+                    {x.tags.map((t, tIndex) => <p key={`tag_${tIndex}`} className="tags">{t}</p>)}
+                </div>
+            </Dialog> : null}
+        </div>)}
         </div>
     </div>
 }
