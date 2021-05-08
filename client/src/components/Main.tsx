@@ -81,7 +81,8 @@ export const Main: React.FC = () => {
                 let apiInstance = new API()
                 let {data} = await apiInstance.updateHover({
                     id:filteredCards[currCard].id,
-                    val:seconds
+                    val:seconds,
+                    title: filteredCards[currCard].title
                 })
             })()
             setSeconds(0)
@@ -106,7 +107,8 @@ export const Main: React.FC = () => {
             (async () => {
                 let apiInstance = new API()
                 let {data} = await apiInstance.updateClick({
-                    id:filteredCards[currCard].id
+                    id: filteredCards[currCard].id,
+                    title: filteredCards[currCard].title
                 })
             })()
         }

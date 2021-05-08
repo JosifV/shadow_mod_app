@@ -17,7 +17,7 @@ export class API {
         try {
             let resp = await axios({
                 method:'POST',
-                url:`${process.env.REACT_APP_BASE_URL}/hover/${payload.id}/${payload.val}`,
+                url:`${process.env.REACT_APP_BASE_URL}/hover/${payload.id}/${payload.val}/${payload.title}`,
             })
             return resp
         } catch (error) {
@@ -28,7 +28,7 @@ export class API {
         try {
             let resp = await axios({
                 method:'POST',
-                url:`${process.env.REACT_APP_BASE_URL}/click/${payload.id}`,
+                url:`${process.env.REACT_APP_BASE_URL}/click/${payload.id}/${payload.title}`,
             })
             return resp
         } catch (error) {

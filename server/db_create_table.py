@@ -1,6 +1,6 @@
 import psycopg2
 
-def db_create_table(table_name):
+def db_create_table(query):
     #Establishing the connection
     conn = psycopg2.connect(
     database="tut_db", user='postgres', password='Jozhe$$$1987', host='127.0.0.1', port= '5432'
@@ -13,12 +13,7 @@ def db_create_table(table_name):
 
     try:
         #Creating table as per requirement
-        sql =f'''CREATE TABLE "{table_name}" (
-                id serial PRIMARY KEY,
-                name text NOT NULL,
-                access integer 
-            )'''
-        cursor.execute(sql)
+        cursor.execute(query)
         print("Table created successfully........")
     except Error as err:
         resp = {'status': 400, 'msg': err}

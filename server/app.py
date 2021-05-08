@@ -3,44 +3,16 @@ from flask_cors import CORS
 import pandas as pd
 import json
 
-
-# import mysql.connector
-# import psycopg2
-
-# from db_create_table import db_create_table
 from db_insert_in_table import db_insert_in_table
 from db_queries import write_in_user
-
-# db_create_table('users')
-# db_insert_in_table(write_in_user('user1'))
-# #establishing the connection
-# conn = psycopg2.connect(
-#    database="postgres", user='postgres', password='Jozhe$$$1987', host='127.0.0.1', port= '5432'
-# )
-# #Creating a cursor object using the cursor() method
-# cursor = conn.cursor()
-
-# #Executing an MYSQL function using the execute() method
-# cursor.execute("select version()")
-
-# # Fetch a single row using fetchone() method.
-# data = cursor.fetchone()
-# print("Connection established to: ",data)
-
-# #Closing the connection
-# conn.close()
-
-# * DB stuff
-# from queries import user_create_table, write_in_user, list_table_users
-# from db_defs import create_table, write_in_table, list_table
-
-# create_table(user_create_table) # create user table
-# write_in_table(write_in_user('user1')) # write in user table
-# list_table(list_table_users) # list user table
+# import unicodedata
+# from numba.cpython.unicode import unicode_str
 
 #**
 app = Flask(__name__)  # initialize flask app
 CORS(app)
+
+
 
 @app.route('/')
 def base():
@@ -54,10 +26,6 @@ def create_user(user_name):
 
 @app.route('/fetch')
 def file_controler():
-    # uploaded_file = request.files['file']  # accept uploaded file
-    # parse = pd.read_excel(uploaded_file)  # pandas parse excel file
-    #*
-    # df = pd.read_excel (r'Path where the Excel file is stored\File name.xlsx')
     parse = pd.read_excel('./file/empl.xlsx')  # pandas parse excel file
     data_frame = pd.DataFrame(parse)  # make pandas data frame
     # print(data_frame)
@@ -71,15 +39,35 @@ def file_controler():
     response = json.dumps(response)
     return response
 
-@app.route('/hover/<id>/<val>', methods=['POST'])
-def hover(id, val):
+@app.route('/hover/<id>/<val>/<title>', methods=['POST'])
+def hover(id, val, title):
     #todo 
+    parse = pd.read_excel('./file/empl.xlsx')  # pandas parse excel file
+    data_frame = pd.DataFrame(parse)  # make pandas data frame
+    data_frame[title][3] += int(val)
+    data_frame.to_excel('./file/empl.xlsx', index=False)  
+    
     return json.dumps({'status': 200, 'msg':{'id':id, 'val':val}})
 
-@app.route('/click/<id>', methods=['POST'])
-def click(id):
+@app.route('/click/<id>/<title>', methods=['POST'])
+def click(id, title):
     #todo 
+    print('KLIK ######')
+    parse = pd.read_excel('./file/empl.xlsx')  # pandas parse excel file
+    data_frame = pd.DataFrame(parse)  # make pandas data frame
+    data_frame[title][2] += 1
+    # print(data_frame)
+    #header=False, 
+    data_frame.to_excel('./file/empl.xlsx', index=False)  
+    
     return json.dumps({'status': 200, 'msg':{'id':id}})
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
+# Pharmacist - ime / heder
+# energetics - kontekst
+# #new  #bio  #life  #past - tagovi
+# 0 - klik
+# 0 - hover
+# 11 - prioritet
